@@ -7,7 +7,7 @@ export default function TypingText({
   cursorIndex,
   getCharacterStyle,
 }) {
-  const maxLineWidth = 80; // Maximum characters per line
+  const maxLineWidth = 100; // Maximum characters per line
 
   // Function to split paragraph into lines without breaking words
   const splitParagraphIntoLines = (text, maxWidth) => {
