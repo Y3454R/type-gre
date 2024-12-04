@@ -12,18 +12,19 @@ export default function TypingText({
       style={{ lineHeight: "2.5rem", wordWrap: "break-word" }}
     >
       {paragraph.split("").map((char, index) => (
-        <span key={index}>
-          {index === cursorIndex ? (
-            <span className="cursor">{char === " " ? "\u00A0" : char}</span>
-          ) : (
-            <span
-              className={`transition-all duration-150 ${getCharacterStyle(
-                index
-              )}`}
-            >
-              {char === " " ? "\u00A0" : char}
+        <span key={index} className="relative">
+          {index === cursorIndex && (
+            <span className="cursor absolute -left-1">
+              {/* Render cursor just before the character */}
             </span>
           )}
+          <span
+            className={`transition-all duration-150 ${getCharacterStyle(
+              index
+            )}`}
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
         </span>
       ))}
     </div>

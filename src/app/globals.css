@@ -19,8 +19,3 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
-.cursor {
-  border-right: 2px solid orange; /* Vertical cursor bar */
-  animation: blink-caret 0.7s steps(1, end) infinite; /* Blinking effect */
-  display: inline-block; /* Ensures it doesn’t affect text spacing */
-}
