@@ -1,0 +1,29 @@
+.cursor {
+  display: inline-block;
+  border-right: 2px solid orange;
+  animation: blink 0.8s step-end infinite;
+}
+
+/* Cursor blinking animation */
+@keyframes blink {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
+}
+
+/* Example styles for correct and incorrect characters */
+.text-green-500 {
+  color: #10b981; /* Tailwind green-500 */
+}
+
+.text-red-500 {
+  color: #ef4444; /* Tailwind red-500 */
+}
+
+.text-gray-600 {
+  color: #4b5563; /* Tailwind gray-600 */
+}
