@@ -1,21 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import paragraphData from "../data/paragraph.json";
+import { useState, useEffect } from "react";
+import { greWords } from "../data/greWords";
 import TypingText from "@/components/TypingText";
+import SynonymDisplay from "@/components/SynonymDisplay";
 
-const PARAGRAPH = paragraphData.dummy.trim();
+const WORDS = Object.keys(greWords["group1"]);
+const PARAGRAPH = WORDS.join(" ").trim();
 
 export default function TypingTest() {
   const [typedText, setTypedText] = useState("");
-  const [cursorIndex, setCursorIndex] = useState(0); // Tracks cursor position
+  const [cursorIndex, setCursorIndex] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-  const [isStarted, setIsStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60); // Timer
-  const [intervalId, setIntervalId] = useState(null);
+  const [currentWord, setCurrentWord] = useState("");
+  const [currentSynonym, setCurrentSynonym] = useState("");
 
   const handleKeyDown = (event) => {
-    if (isComplete) return; // Prevent typing after completion
+    if (isComplete) return;
 
     const key = event.key;
     if (key === "Backspace") {
@@ -34,39 +35,28 @@ export default function TypingTest() {
     const isCorrect = isTyped && typedText[index] === PARAGRAPH[index];
     const isError = isTyped && typedText[index] !== PARAGRAPH[index];
 
-    if (index === cursorIndex) return "text-white bg-blue-500"; // Cursor position
-    if (isCorrect) return "text-green-500"; // Green for correct characters
-    if (isError) return "text-red-500"; // Red for incorrect characters
-    return "text-gray-600"; // Gray for untapped characters
+    if (index === cursorIndex) return "text-white bg-blue-500";
+    if (isCorrect) return "text-green-500";
+    if (isError) return "text-red-500";
+    return "text-gray-600";
   };
 
-  const handleReset = () => {
-    setTypedText("");
-    setCursorIndex(0);
-    setIsComplete(false);
-    setIsStarted(false);
-    setTimeLeft(60);
-    clearInterval(intervalId);
-    setIntervalId(null);
-  };
+  // Find the current word based on cursorIndex
+  useEffect(() => {
+    const wordsTyped = typedText.trim().split(" ");
+    const currentWord = wordsTyped[wordsTyped.length - 1];
+    setCurrentWord(currentWord);
 
-  const handleStartTest = () => {
-    setIsStarted(true);
-    startTimer();
-  };
+    if (greWords.group1[currentWord]) {
+      setCurrentSynonym(greWords.group1[currentWord]);
+    } else {
+      setCurrentSynonym(""); // Clear the synonym if no match
+    }
 
-  const startTimer = () => {
-    const id = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 0) {
-          clearInterval(id);
-          setIsComplete(true);
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-    setIntervalId(id);
-  };
+    if (typedText === PARAGRAPH) {
+      setIsComplete(true);
+    }
+  }, [typedText]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -77,20 +67,7 @@ export default function TypingTest() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-6">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold tracking-wide">Typing Test</h1>
-        <p className="text-gray-400 mt-2">
-          Type the text below as quickly and accurately as you can.
-        </p>
-      </div>
-
-      {/* Timer */}
-      {!isComplete && (
-        <div className="text-lg mb-4">
-          Time Left: <span className="font-bold">{timeLeft}</span> seconds
-        </div>
-      )}
+      <SynonymDisplay synonym={currentSynonym} />
 
       {/* Typing Area */}
       <TypingText
@@ -103,28 +80,8 @@ export default function TypingTest() {
       {/* Completion Message */}
       {isComplete && (
         <div className="mt-6 text-green-400 font-bold text-lg">
-          🎉 Congratulations! You completed the test.
+          🎉 Congratulations! You completed the words.
         </div>
-      )}
-
-      {/* Start Button */}
-      {!isStarted && !isComplete && (
-        <button
-          onClick={handleStartTest}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
-        >
-          Start Test
-        </button>
-      )}
-
-      {/* Reset Button */}
-      {isComplete && (
-        <button
-          onClick={handleReset}
-          className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700"
-        >
-          Restart Test
-        </button>
       )}
     </div>
   );

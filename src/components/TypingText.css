@@ -15,16 +15,3 @@
   white-space: nowrap; /* Prevent unnecessary breaking */
   justify-content: center; /* Center text within the container */
 }
-
-/* .cursor {
-  width: 0.1rem;
-  height: 1.5rem;
-  background-color: orange;
-  animation: blink 0.5s step-end infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-} */
